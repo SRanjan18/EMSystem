@@ -7,7 +7,7 @@ import AddEmployeeComponent from './components/AddEmployeeComponent';
 function App() {
   return (
     <div>
-      <Router>
+      <Router basename="/EMSystem">
         <HeaderComponent />
         <div className= "container">
           <Routes>
