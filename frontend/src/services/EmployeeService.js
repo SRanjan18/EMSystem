@@ -24,9 +24,9 @@ class EmployeeService{
         return axios.delete(EMPLOYEE_BASE_REST_API_URL + '/' + employeeId);
     }
 }
-const REST_API_BASE_URL="http://localhost:8080/api/employees";
 
 
-export default new EmployeeService();
+const employeeService = new EmployeeService();
+export default employeeService;
 
 
