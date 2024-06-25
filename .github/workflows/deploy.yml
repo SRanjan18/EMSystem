@@ -28,7 +28,7 @@ jobs:
 
       - name: Deploy to GitHub Pages
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
         run: |
           cd frontend/build
           git init
@@ -36,5 +36,5 @@ jobs:
           git config user.name "Soumya Ranjan"
           git add .
           git commit -m "Deploy to GitHub Pages"
-          git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git remote add origin https://x-access-token:${{ secrets.TOKEN }}@github.com/${{ github.repository }}
           git push --force origin HEAD:actions
