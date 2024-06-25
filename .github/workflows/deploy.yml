@@ -3,38 +3,43 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - actions  # Trigger deployment on push to 'actions' branch
+      - actionsfrontend  # Trigger deployment on push to 'actions' branch
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-          ref: actions  # Ensure we are checking out the 'actions' branch
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: '22'
 
-      - name: Install dependencies and build
-        run: |
-          cd frontend
-          npm install
-          npm run build
-
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./frontend
+      - name: Build project
+        run: npm run build
+        working-directory: ./frontend
+      - name: Upload to artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./frontend/docs
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    steps:
       - name: Deploy to GitHub Pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        run: |
-          cd frontend/build
-          git init
-          git config user.email "soumya18ranjan.sr@gmail.com"
-          git config user.name "Soumya Ranjan"
-          git add .
-          git commit -m "Deploy to GitHub Pages"
-          git remote add origin https://x-access-token:${{ secrets.TOKEN }}@github.com/${{ github.repository }}
-          git push --force origin HEAD:actions
+        uses: actions/deploy-pages@v4
